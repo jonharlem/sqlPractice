@@ -1,12 +1,6 @@
-QL Commands Exercise
+### More SQL Examples
 
-## Objectives
-* Gain practice using Postgres SQL commands
-* Understand CRUD
-* Become familiar with Postgres documentation [Postgres 9.3 Docs](http://www.postgresql.org/docs/9.3/interactive/index.html)	
-
-## CRUD (Create, Read, Update, Destroy)
-  - __CRUD => Create, Read, Update, Destroy__ This is the lifecycle of data in an applicatoin.  In SQL, CRUD can be mapped to the following __INSERT, SELECT, UPDATE, DELETE__. 
+- __CRUD => Create, Read, Update, Destroy__ This is the lifecycle of data in an applicatoin.  In SQL, CRUD can be mapped to the following __INSERT, SELECT, UPDATE, DELETE__.
 
 ```
   Create	INSERT
@@ -15,7 +9,7 @@ QL Commands Exercise
   Destroy	DELETE
 ```
 
-## Creating a Database
+##### Creating a Database
 
 Click on the elephant in the top right corner of the page to open the postgres menu. Click "open psql" to open a psql terminal window. Insert the following commands in the psql terminal window. To close the window: \q.
 
@@ -44,7 +38,7 @@ Check what tables we have in our newly created database:
 
 At this point we should have a database with no tables in it.  So now we need to create tables.
 
-## Creating a Table
+##### Creating a Table
 
 Let's look at the Postgres docs for __[CREATE TABLE doc](http://www.postgresql.org/docs/9.3/static/sql-createtable.html).__
 
@@ -72,17 +66,6 @@ CREATE TABLE instructors (
     email TEXT
 );
 ```
-#### What is a Primary Key?
-
-It denotes an attribute on a table that can uniquely identify the row.
-
-#### What does SERIAL Do?
-
-SERIAL tells the database to automatically assign the next unused integer value to id whenever we insert into the database and do not specify id.  In general, if you have a column that is set to SERIAL, it is a good idea to let the database assign the  value for you.
-
-#### Data Types
-
-Similar to how Ruby has types of data, SQL defines types that can be stored in the DB. Here are some common ones:
 
 * Serial
 * Integer
@@ -92,7 +75,7 @@ Similar to how Ruby has types of data, SQL defines types that can be stored in t
 * Timestamp
 * Boolean (True or False)
 
-### Dropping a Table
+###### Dropping a Table
 
 Let's say we no longer need the instructors table from above, to get rid of all of the data and the defiintion of the table, we can use the DROP statement.  Here are the [DROP TABLE doc](http://www.postgresql.org/docs/9.3/static/sql-droptable.html).
 
@@ -100,14 +83,14 @@ Let's say we no longer need the instructors table from above, to get rid of all 
 DROP TABLE instructors;
 ```
 
-## Create Table (again)
+##### Create Table (again)
 
 ```
 CREATE TABLE instructors (id SERIAL PRIMARY KEY, name TEXT, phone_no TEXT, email TEXT);
 ```
 
 
-## INSERT (Create part of CRUD)
+##### INSERT (Create part of CRUD)
 
 The INSERT SQL command adds new data to a table.  Here are the [INSERT doc](http://www.postgresql.org/docs/9.3/static/sql-insert.html).
 
@@ -128,12 +111,12 @@ id		name           	phone_no	email
 1   	Spencer Eldred 	123-4567	spencer@galvanize.it
 2		Jeff Taggart	987-6543	taggart@galvanize.it
 3		Hunter Gillane	567-1234	hunter@galvanize.it
- 
+
 ```
 
 Even though we did not specify an id, one was created anyways.  Since we have SERIAL as the data type of id, the database knows on a new insert to automatically assign a new unique id to the row.
 
-## SELECT (Read part of CRUD)
+##### SELECT (Read part of CRUD)
 
 A select statement allows you to get data from the database.  Here are the [SELECT doc](http://www.postgresql.org/docs/9.3/static/sql-select.html).  Also, postgres has a good [SELECT tutorial](http://www.postgresql.org/docs/9.3/static/tutorial-select.html).  
 
@@ -160,9 +143,9 @@ SELECT id, name, email FROM instructors;
   3 | Hunter Gillane | hunter@galvanize.it
 (3 rows)
 ```
-### Apply various filters: WHERE, ORDER BY, ASC, and LIMIT:
+###### Apply various filters: WHERE, ORDER BY, ASC, and LIMIT:
 
-This will select the name and email from instructors table **WHERE the name = "Spencer Eldred"**. 
+This will select the name and email from instructors table **WHERE the name = "Spencer Eldred"**.
 
 ```
 SELECT id, name, email FROM instructors WHERE name = 'Hunter Gillane';
@@ -215,7 +198,7 @@ SELECT name, email FROM instructors ORDER BY name ASC LIMIT 2;
 
 ```
 
-## UPDATE (Update part of CRUD)
+##### UPDATE (Update part of CRUD)
 
 The update statement is defined [UPDATE doc](http://www.postgresql.org/docs/9.3/static/sql-update.html) in the postgres docs.  It is used to change existing data in our database.
 
@@ -226,13 +209,13 @@ UPDATE instructors SET phone_no='222-1234' WHERE name='Spencer Eldred';
 
 SELECT id, name, phone_no FROM instructors WHERE name='Spencer Eldred';
 
- id |      name      | phone_no 
+ id |      name      | phone_no
 ----+----------------+----------
   1 | Spencer Eldred | 222-1234
 (1 row)
 ```
 
-## DELETE (Destroy part of CRUD)
+##### DELETE (Destroy part of CRUD)
 
 Deleting works similarly to a select statement.  Here are the [DELETE doc](http://www.postgresql.org/docs/9.3/static/sql-delete.html)
 
@@ -250,6 +233,3 @@ SELECT * FROM instructors;
 (2 rows)
 ```
 ** Notice that the id numbers did not change, even though id=1 was deleted. **
-
-
-
