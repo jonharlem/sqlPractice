@@ -5,18 +5,18 @@ In this example we will be working with: PostgreSQL [Postgres Documentation](htt
 Further reading on SQL: [SQL Wikipedia](https://en.wikipedia.org/wiki/SQL)
 
 Great Resources:
-  - [PostgreSQL Commands](http://www.postgresql.org/docs/9.4/interactive/sql-commands.html)
-  - [PostgreSQL Coding Conventions](http://www.postgresql.org/docs/9.4/interactive/source.html)
 
+- [PostgreSQL Commands](http://www.postgresql.org/docs/9.4/interactive/sql-commands.html)
+- [PostgreSQL Coding Conventions](http://www.postgresql.org/docs/9.4/interactive/source.html)
 
-Goals & Objectives
+## Objectives
 ------------------
-  A student should be able to:
-  * Understand what a relational database is and why you use it
-  * Undertand the parts of a relational database
-      * Table
-      * Row
-      * Column
+
+By the end of this unit, you should be able to:
+
+* Describe what an RDBMS is and why you use it
+* Describe / draw the structure of an RDBMS
+* Execute commands to
   * create a new database
   * create a new table
   * insert data into a table with `insert`
@@ -27,51 +27,8 @@ Goals & Objectives
   * delete one/many rows
   * drop a table/database
 
-Introduce Concepts
+## Installation
 ------------------
-  - Setup Postgres
-  - Run Postgres
-    - `psql` in the terminal
-  - Intro to SQL
-    - Data Definition Language (DDL): _The schema of a database._
-      - Create a database
-      - Create a table
-      - Drop a table
-      - Introduce Datatypes
-        - serial [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
-        - varchar [Character types](http://www.postgresql.org/docs/9.2/static/datatype-character.html)
-        - point [Geometric types](http://www.postgresql.org/docs/9.2/static/datatype-geometric.html)
-        - int [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
-        - real [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
-        - date [Data/time types](http://www.postgresql.org/docs/9.2/static/datatype-datetime.html)
-      - Introduce Constraints
-        - [foreign keys](http://www.postgresql.org/docs/9.3/static/ddl-constraints.html#DDL-CONSTRAINTS-FK)
-        - [primary keys](http://www.postgresql.org/docs/9.3/static/ddl-constraints.html#DDL-CONSTRAINTS-PRIMARY-KEYS)
-        - Schema Constraints
-    - Data Manipulation Language (DML): _Interacting with the database and tables._
-      - Select
-      - Update
-      - Delete
-      - Insert
-      - Join
-
-
-Common Questions
-----------------
-
-  * What is a Primary Key?
-
-It denotes an attribute on a table that can uniquely identify the row.
-
-  * What does SERIAL Do?
-
-SERIAL tells the database to automatically assign the next unused integer value to id whenever we insert into the database and do not specify id.  In general, if you have a column that is set to SERIAL, it is a good idea to let the database assign the  value for you.
-
-  * Data Types
-
-Similar to how Ruby has types of data, SQL defines types that can be stored in the DB. Here are some common ones:
-
-
 
 Postgres Installation & Startup
 -------------------------------
@@ -81,6 +38,11 @@ When you are done, make sure PostgreSql was installed and set it to auto start w
 
 With `homebrew` installed, you can run `brew install postgresql`. If not, you can download it here: [PostgreSQL](http://www.postgresql.org/download/)
 
+```
+$ brew doctor
+```
+
+Make sure it says that you are "ready to brew".  If not, fix all errors first.  Do NOT type `sudo brew...`.
 
 ```
 $ brew update
@@ -94,50 +56,139 @@ $ ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
 $ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 ```
 
-(If you ever need to go back to that command, type `brew info postgres`)
+> NOTE: those may not be the _EXACT_ commands.  Copy the ones provided that look similar.
+
+> NOTE: if you clear your terminal, you can get them back with `brew info postgres`.
+
+Now your database should be running.  To create your default database, run:
+
+```
+createdb
+```
 
 Check that `psql` has been installed correctly by typing:
 
 ```
 $ psql --version
 ```
-You should see something like: `psql (PostgreSQL) 9.3.2`
 
+You should see something like: `psql (PostgreSQL) 9.3.2` (the version number may be higher, that's OK).
 
-Database Setup
---------------
+Now you should be able to run:
 
-- Create the database
+```
+psql
+```
+
+And you'll be in an interactive postgres terminal session.
+
+To get out of `psql` use `CTL+d` or type `\q`.
+
+## Intro to RDBMS
+
+- **R**elational
+- **D**atabase
+- **M**anagement
+- **S**ystem
+
+<!--** comment inserted so github markdown editing syntax highlighting doesn't break -->
+
+An RDBMS is comprised of:
+
+- A server, which can hold multiple databases
+  - A database, which can hold multiple tables, indexes and foreign key relationships (among other things)
+  - A table, which is comprised of columns and rows
+- A client
+  - `psql` is a client
+  - your Node app will be a client as well
+
+Clients make _requests_ to servers using a special language, SQL (structured query language), and servers return _responses_ - typically called result sets - that clients then parse.
+
+A server is like a web server - it's a running process on your machine that's waiting to get requests.
+
+Tables are made up of columns.  Each column has:
+
+- a name
+- a data type
+- (potentially) constraints (like being not nullable, unique or referencing columns in other tables)
+- (potentially) special behaviors such as auto-incrementing integer fields
+
+## Intro to SQL
+
+There are two types of SQL commands:
+
+- DDL - data definition language
+- DML - data manipulation language
+
+> In addition, there are special commands you type _only_ when inside the `psql` REPL - these are NOT SQL commands, but rather just `psql` commands.  `psql` commands start with `\` - like `\q`, `\dt`, `\l` and `\c`.
+
+### DDL (Data Definition Language)
+
+Data Definition Language (DDL) affects _The schema of a database._  That is to say, tables, columns and relationships.  Common DDL commands are:
+
+- Create a database
+- Create a table
+- Drop a table
+
+Read more on Datatypes:
+- serial [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
+- varchar [Character types](http://www.postgresql.org/docs/9.2/static/datatype-character.html)
+- point [Geometric types](http://www.postgresql.org/docs/9.2/static/datatype-geometric.html)
+- int [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
+- real [Numeric types](http://www.postgresql.org/docs/9.0/static/datatype-numeric.html)
+- date [Data/time types](http://www.postgresql.org/docs/9.2/static/datatype-datetime.html)
+
+What's the difference between `varchar` and `text`?  `varchar` is for strings (for example strings that would be entered via an html `input` field) where as `text` fields are for large blobs of text and they are slower to insert / query.  So choose `varchar` unless you are storing amounts of text larger than, say, 1000 characters.
+
+### Data Manipulation Language (DML):
+
+Whereas DDL affects the _schema_ of the database, DML _interacts with the data._  That is to say, DML affects tables / column definitions, and DML affects _rows_.
+
+- Select
+- Update
+- Delete
+- Insert
+- Join
+
+## Exercise - weatherapp
+
+Create the database:
 
 ```
 $ psql
-$ CREATE DATABASE weatherapp;
+user=# CREATE DATABASE weatherapp;
 ```
 
-- Load the schema
+Quit `psql` with `CTRL+d` or by typing `\q`.
+
+> NOTE: `$` indicates you should run something on the command line.
+> `user=#` indicates you should run something from within `psql`.
+
+Load the schema
 
 ```
 $ psql "weatherapp" < db/schema.sql
 ```
 
-- Load the seed data
+Load the seed data
 
 ```
 $ psql "weatherapp" < db/seed.sql
 ```
 
+## Query
 
-Query
------
 To be able to run queries on our database. You must first `\connect` or `\c` to the `weatherapp` database. Type `\dt` to list all _database tables_.
 
 ```
 $ psql
-$ \connect weatherapp
+user=# \connect weatherapp
 ```
+
 List all of the `weatherapp` database tables:
+
 ```
-$ \dt
+user=# \dt
 
   List of relations
    Schema |  Name   | Type  | Owner
@@ -145,10 +196,11 @@ $ \dt
    public | cities  | table | <your-name>
    public | weather | table | <your-name>
 ```
+
 Describe the table using `\d+ <table-name>`
 
 ```
-$ \d+ cities
+user=# \d+ cities
 
   Table "public.cities"
     Column  |         Type          |                      Modifiers                      | Storage  | Stats target | Description
@@ -163,26 +215,30 @@ $ \d+ cities
   Referenced by:
   TABLE "weather" CONSTRAINT "weather_city_id_fkey" FOREIGN KEY (city_id) REFERENCES cities(id)
 ```
+
 Resources on [Index types](http://www.postgresql.org/docs/9.2/static/indexes-types.html)
 
-- `SELECT` all records from a table
+`SELECT` all records from a table
+
 ```
-$ SELECT * FROM cities;
-$ SELECT * FROM weather;
+user=# SELECT * FROM cities;
+user=# SELECT * FROM weather;
 ```
 
-- `SELECT` a specific record from a table
+`SELECT` a specific record from a table
+
 ```
-$ SELECT * FROM cities WHERE city = 'Boulder';
+user=# SELECT * FROM cities WHERE city = 'Boulder';
 
    id |  city   | location
   ----+---------+----------
     1 | Boulder | (2,5)
 ```
 
-- Updating records with `UPDATE`:
+Updating records with `UPDATE`:
+
 ```
-$ UPDATE
+user=# UPDATE
     weather
   SET
     temp_lo = temp_lo+1, temp_hi = temp_lo+15, prcp = DEFAULT
@@ -190,7 +246,7 @@ $ UPDATE
     city_id = 1;
 
 
-$ SELECT * FROM weather WHERE city_id = 1;
+user=# SELECT * FROM weather WHERE city_id = 1;
 
  id | city_id | temp_lo | temp_hi | prcp |    date
 ----+---------+---------+---------+------+------------
@@ -200,14 +256,15 @@ $ SELECT * FROM weather WHERE city_id = 1;
 
 ```
 
-- Create a record with `INSERT`:
+Create a record with `INSERT`:
+
 ```
-$ INSERT INTO
+user=# INSERT INTO
     cities
   VALUES
     (default, 'Queens', point(10,27));
 
-$ SELECT * FROM cities;
+user=# SELECT * FROM cities;
    id |   city   | location
   ----+----------+----------
     1 | Boulder  | (2,5)
@@ -217,7 +274,8 @@ $ SELECT * FROM cities;
 
 ```
 
-- Create a record with `INSERT` and return it's `id`:
+user=# Create a record with `INSERT` and return it's `id`:
+
 ```
 INSERT INTO cities VALUES (default, 'New York', point(32,78)) RETURNING id;
 
@@ -227,15 +285,16 @@ INSERT INTO cities VALUES (default, 'New York', point(32,78)) RETURNING id;
   (1 row)
 ```
 
-- Delete a record and all of it's `foreign key` relationships. This works because the schema is created as `city_id int references cities(id) on delete cascade`:
-```
-$ DELETE FROM cities WHERE city = 'Boulder';
-```
-
-- Example of a simple `join`. Queries can access multiple tables at once, or access the same table in such a way that multiple rows of the table are being processed at the same time. A query that accesses multiple rows of the same or different tables at one time is called a join query[...](http://www.postgresql.org/docs/8.3/static/tutorial-join.html)
+Delete a record and all of it's `foreign key` relationships. This works because the schema is created as `city_id int references cities(id) on delete cascade`:
 
 ```
-$ SELECT * FROM cities, weather WHERE cities.id = weather.city_id;
+user=# DELETE FROM cities WHERE city = 'Boulder';
+```
+
+Example of a simple `join`. Queries can access multiple tables at once, or access the same table in such a way that multiple rows of the table are being processed at the same time. A query that accesses multiple rows of the same or different tables at one time is called a join query[...](http://www.postgresql.org/docs/8.3/static/tutorial-join.html)
+
+```
+user=# SELECT * FROM cities, weather WHERE cities.id = weather.city_id;
 
    id |   city   | location | id | city_id | temp_lo | temp_hi |  prcp  |    date
   ----+----------+----------+----+---------+---------+---------+--------+------------
@@ -251,22 +310,25 @@ $ SELECT * FROM cities, weather WHERE cities.id = weather.city_id;
 ```
 
 Another way to write an `INNER JOIN`:
+
 ```
 SELECT * FROM cities INNER JOIN weather ON (cities.id = weather.city_id);
 ```
 
-- Attempt to `INSERT` an invalid record:
+Attempt to `INSERT` an invalid record:
+
 ```
-INSERT INTO weather VALUES (default, 1, 44, 88, 243433, now());
+user=# INSERT INTO weather VALUES (default, 1, 44, 88, 243433, now());
   ERROR:  new row for relation "weather" violates check constraint "weather_check"
   DETAIL:  Failing row contains (10, 1, 44, 88, 243433, 2015-11-10).
 ```
 
-- `DROP` an entire table
-```
-$ DROP TABLE cities CASCADE;
+`DROP` an entire table
 
-$ \dt
+```
+user=# DROP TABLE cities CASCADE;
+
+user=# \dt
   List of relations
    Schema |  Name   | Type  | Owner
   --------+---------+-------+-------
@@ -274,7 +336,8 @@ $ \dt
   (1 row)
 ```
 
-- [SQL Prepared Statements](http://www.postgresql.org/docs/9.2/static/sql-prepare.html)
+[SQL Prepared Statements](http://www.postgresql.org/docs/9.2/static/sql-prepare.html)
+
 ```
 PREPARE
   city ( varchar, point )
@@ -308,3 +371,24 @@ EXECUTE city ( 10, 'Bronx', point(13,34) );
     * [Filtering with WHERE](http://www.postgresql.org/docs/9.3/static/queries-table-expressions.html#QUERIES-WHERE)
 * [Updating data](http://www.postgresql.org/docs/9.3/static/dml-update.html)
 * [Deleting data](http://www.postgresql.org/docs/9.3/static/dml-delete.html)
+
+Common Questions
+----------------
+
+  * What is a Primary Key?
+
+It denotes an attribute on a table that can uniquely identify the row.
+
+  * What does SERIAL Do?
+
+SERIAL tells the database to automatically assign the next unused integer value to id whenever we insert into the database and do not specify id.  In general, if you have a column that is set to SERIAL, it is a good idea to let the database assign the  value for you.
+
+  * Data Types
+
+Similar to how Ruby has types of data, SQL defines types that can be stored in the DB. Here are some common ones:
+
+Read up on Constraints
+
+- [foreign keys](http://www.postgresql.org/docs/9.3/static/ddl-constraints.html#DDL-CONSTRAINTS-FK)
+- [primary keys](http://www.postgresql.org/docs/9.3/static/ddl-constraints.html#DDL-CONSTRAINTS-PRIMARY-KEYS)
+- Schema Constraints
