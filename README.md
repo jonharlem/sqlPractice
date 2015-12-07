@@ -56,6 +56,10 @@ Fork and clone this repository.
 - Describe database permissions
   - The concept of a Role
   - The basic elements that you can GRANT
+- Describe transactions
+- Describe migrations
+- Describe and identify database drivers, migration libraries, query builders and ORMs
+- Describe SQL injection attacks and how to prevent them
 
 ## Sequence
 
