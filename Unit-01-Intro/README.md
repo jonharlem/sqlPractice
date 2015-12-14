@@ -33,40 +33,19 @@ By the end of this unit, you should be able to:
 Postgres Installation & Startup
 -------------------------------
 
-Make sure that [Homebrew](http://brew.sh/) has the latest formulas and then install PostgreSql.
-When you are done, make sure PostgreSql was installed and set it to auto start whenever you computer starts.
+We could install postgres similarly to how we installed node, with `brew`. There is a simpler way- using [postgres.app](http://postgresapp.com/). Download it now.
 
-With `homebrew` installed, you can run `brew install postgresql`. If not, you can download it here: [PostgreSQL](http://www.postgresql.org/download/)
+After you download, you should unzip, install, and open the app. Now you have a postgres server, which you should be able to see by checking out the little elephant in the top status bar. 
 
-```
-$ brew doctor
-```
+[You'll need to configure your `$PATH` variable](http://postgresapp.com/documentation/cli-tools.html). 
 
-Make sure it says that you are "ready to brew".  If not, fix all errors first.  Do NOT type `sudo brew...`.
+If you are using `bash` (default shell on OS X), add the following line to `~/.bash_profile`:
 
-```
-$ brew update
-$ brew install postgres
+```shell
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin
 ```
 
-Before you can connect to `postgres` you must startup the server. Follow the instructions in the brew install to have postgres start at login.  The commands look something like this:
-
-```
-$ ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
-$ launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
-```
-
-> NOTE: those may not be the _EXACT_ commands.  Copy the ones provided that look similar.
-
-> NOTE: if you clear your terminal, you can get them back with `brew info postgres`.
-
-Now your database should be running.  To create your default database, run:
-
-```
-createdb
-```
-
-Check that `psql` has been installed correctly by typing:
+Once you're sure your database is running, jump into a **new instance of terminal**. To test whether you've set up your `$PATH` variable correctly, run:
 
 ```
 $ psql --version
