@@ -153,7 +153,7 @@ In `psql` you can run the previous command by using the up arrow, or using `CTRL
 
 ## Join'em up!
 
-1. Select all columns from the users table, joined to all columns of the
+1. Select all columns from the users table, joined to all columns of the `employments` table.
 
 1. Select `first_name`, `last_name`, `title`, `organization`, `start_year`, and `end_year` from the `users` table joined to the `employments` table.
 
