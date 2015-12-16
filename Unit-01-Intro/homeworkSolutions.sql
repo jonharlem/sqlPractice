@@ -19,4 +19,9 @@ SELECT * FROM urls;
 SELECT original_url FROM urls;
 -- Display one row from the urls table with a specific id
 SELECT * FROM urls WHERE id=2;
-
+-- Display one row from the urls table with a specific original_url
+SELECT * FROM urls WHERE original_url='http://explainshell.com/';
+-- Update one of the rows with a specific id to have a new count
+UPDATE urls SET count=3 WHERE id=3;
+-- Delete one row that matches an original_url
+DELETE FROM urls WHERE original_url='http://explainshell.com/';
